@@ -25,26 +25,46 @@ import random
 
 def validate_input(num_dice, num_faces):
     """
-    Validates the input for the number of dice and faces per dice.
+    Validates the input for the number of dice and number of faces per dice.
 
     Args:
-        num_dice (int): The number of dice to roll.
+        num_dice (int): The number of dice.
         num_faces (int): The number of faces per dice.
 
     Raises:
-        ValueError: If the number of dice is less than 1 or the number of faces per dice is less than 4.
+        ValueError: If the input is invalid.
 
     Returns:
         bool: True if the input is valid.
     """
-    if num_dice < 1:
-        raise ValueError("The number of dice to roll should be at least 1.")
-    if num_faces < 4:
-        raise ValueError("The number of faces per dice should be at least 4.")
-
-    return True
+    if num_dice is str:
+        raise ValueError("The number of dice must be an integer not a string.")
+    elif num_faces is str:
+        raise ValueError("The number of faces per dice must be an integer not a string.")
+    elif num_dice != int(num_dice):
+        raise ValueError("The number of dice must be an integer.")
+    elif num_faces != int(num_faces):
+        raise ValueError("The number of faces per dice must be an integer.")
+    elif num_dice < 1:
+        raise ValueError("The number of dice must be at least 1.")
+    elif num_faces < 4:
+        raise ValueError("The number of faces per dice must be at least 4.")
+    else:
+        return True
 
 def roll_dice(num_dice, num_faces):
+    """
+    Rolls a specified number of dice with a specified number of faces.
+
+    Args:
+        num_dice (int): The number of dice to roll.
+        num_faces (int): The number of faces on each die.
+
+    Returns:
+        list: A list containing the result of each roll.
+    """
+    # Validate the input and return the results if true or prompt the user to
+    # enter the input again
     if validate_input(num_dice, num_faces):
         # Display the result of each roll
         results = []
@@ -52,15 +72,48 @@ def roll_dice(num_dice, num_faces):
             results.append(random.randint(1, num_faces))
         return results
 
-def main():
-    roll_again = "yes"
-    while roll_again.lower() == "yes" or roll_again.lower() == "y":
-        # Prompt the user to enter the number of dice to roll, minimum 1.
-        num_dice = int(input("Enter the number of dice to roll (min. 1): "))
-        # Prompt the user to enter the number of faces per dice, minimum 4.
-        num_faces = int(input("Enter the number of faces per dice (min. 4): "))
 
-        # Validate the user input
+def prompt_user():
+    """
+    Prompt the user to enter the number of dice to roll and the number of faces per dice.
+
+    Returns:
+        tuple: A tuple containing the number of dice to roll and the number of faces per dice.
+
+    Raises:
+        ValueError: If the input is invalid.
+    """
+    num_dice = int(input("Enter the number of dice to roll (min. 1): "))
+    num_faces = int(input("Enter the number of faces per dice (min. 4): "))
+
+    if validate_input(num_dice, num_faces):
+        return num_dice, num_faces
+    else:
+        raise ValueError("Invalid prompt input.")
+
+def main():
+    """
+    Function to simulate rolling dice.
+
+    This function prompts the user to enter the number of dice to roll and the number of faces per dice.
+    It then rolls the dice, displays the result of each roll, and calculates the sum of all the rolls.
+    The user is asked if they want to roll again.
+
+    Parameters:
+    None
+
+    Returns:
+    None
+    """
+    # Initialize the roll_again variable
+    roll_again = "y"
+
+    # Loop to allow the user to roll the dice multiple times
+    while roll_again.lower() == "y":
+        # Prompt the user to enter the number of dice to roll and the number of faces per dice
+        num_dice, num_faces = prompt_user()
+
+        # Roll the dice
         results = roll_dice(num_dice, num_faces)
 
         # Display the result of each roll

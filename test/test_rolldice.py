@@ -1,28 +1,33 @@
 import unittest
-from main import roll_dice, validate_input
+from main import roll_dice
 
 class TestRollDice(unittest.TestCase):
     def test_roll_dice(self):
-        # Test roll_dice function with valid inputs
-        num_dice = 2
-        num_faces = 6
-        results = roll_dice(num_dice, num_faces)
-        self.assertEqual(len(results), num_dice)
-        for result in results:
-            self.assertGreaterEqual(result, 1)
-            self.assertLessEqual(result, num_faces)
+        # Test rolling 2 dice with 6 faces
+        result = roll_dice(2, 6)
+        self.assertEqual(len(result), 2)
+        for roll in result:
+            self.assertGreaterEqual(roll, 1)
+            self.assertLessEqual(roll, 6)
 
     def test_roll_dice_invalid_input(self):
-        # Test roll_dice function with invalid inputs
-        num_dice = 0
-        num_faces = 6
+        # Test rolling with invalid input
         with self.assertRaises(ValueError):
-            roll_dice(num_dice, num_faces)
-
-        num_dice = 2
-        num_faces = 3
+            roll_dice(0, 6)
         with self.assertRaises(ValueError):
-            roll_dice(num_dice, num_faces)
+            roll_dice(2, 3)
+        with self.assertRaises(ValueError):
+            roll_dice(-1, 6)
+        with self.assertRaises(ValueError):
+            roll_dice(2, -4)
+        with self.assertRaises(ValueError):
+            roll_dice(1.5, 6)
+        with self.assertRaises(ValueError):
+            roll_dice(2, 4.5)
+        with self.assertRaises(ValueError):
+            roll_dice("2", 6)
+        with self.assertRaises(ValueError):
+            roll_dice(2, "6")
 
 if __name__ == '__main__':
     unittest.main()
