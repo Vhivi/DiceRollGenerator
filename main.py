@@ -37,10 +37,10 @@ def validate_input(num_dice, num_faces):
     Returns:
         bool: True if the input is valid.
     """
-    if num_dice is str:
-        raise ValueError("The number of dice must be an integer not a string.")
-    elif num_faces is str:
-        raise ValueError("The number of faces per dice must be an integer not a string.")
+    if type(num_dice) is not int:
+        raise ValueError("The number of dice must be an integer.")
+    elif type(num_faces) is not int:
+        raise ValueError("The number of faces per dice must be an integer.")
     elif num_dice != int(num_dice):
         raise ValueError("The number of dice must be an integer.")
     elif num_faces != int(num_faces):
