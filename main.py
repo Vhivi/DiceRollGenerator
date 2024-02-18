@@ -23,6 +23,8 @@ ERROR_MSG_1 = "The number of dice must be an integer."
 ERROR_MSG_2 = "The number of faces per dice must be an integer."
 ERROR_MSG_3 = "The number of dice must be at least 1."
 ERROR_MSG_4 = "The number of faces per dice must be at least 4."
+ERROR_MSG_5 = "You have exceeded the maximum number of attempts."
+ERROR_MSG_6 = "Try again."
 
 ################################################################
 # Function declarations
@@ -30,38 +32,31 @@ ERROR_MSG_4 = "The number of faces per dice must be at least 4."
 
 def validate_input(num_dice, num_faces):
     """
-    Validates the input for the number of dice and number of faces per dice.
+    Validate the input for the number of dice and number of faces.
 
     Args:
         num_dice (int): The number of dice.
-        num_faces (int): The number of faces per dice.
-
-    Raises:
-        ValueError: If the input is invalid.
+        num_faces (int): The number of faces on each dice.
 
     Returns:
-        tuple: A tuple containing a boolean indicating if the input is valid and an error number if the input is invalid.
+        tuple: A tuple containing a boolean value indicating whether the input is valid and an error code if the input is invalid.
+               If the input is valid, the error code is None.
+
     """
     if type(num_dice) is not int:
-        error_num = 1
-        raise ValueError(ERROR_MSG_1)
+        return False, 1 # ERROR_MSG_1
     elif type(num_faces) is not int:
-        error_num = 2
-        raise ValueError(ERROR_MSG_2)
+        return False, 2 # ERROR_MSG_2
     elif num_dice != int(num_dice):
-        error_num = 1
-        raise ValueError(ERROR_MSG_1)
+        return False, 1 # ERROR_MSG_1
     elif num_faces != int(num_faces):
-        error_num = 2
-        raise ValueError(ERROR_MSG_2)
+        return False, 2 # ERROR_MSG_2
     elif num_dice < 1:
-        error_num = 3
-        raise ValueError(ERROR_MSG_3)
+        return False, 3 # ERROR_MSG_3
     elif num_faces < 4:
-        error_num = 4
-        raise ValueError(ERROR_MSG_4)
+        return False, 4 # ERROR_MSG_4
     else:
-        return True, error_num
+        return True, None
 
 def roll_dice(num_dice, num_faces):
     """
@@ -94,24 +89,42 @@ def prompt_user():
         tuple: A tuple containing the number of dice to roll and the number of faces per dice.
 
     Raises:
-        ValueError: If the input is invalid.
+        ValueError: If too many attempts are invalid.
     """
-    num_dice = int(input("Enter the number of dice to roll (min. 1): "))
-    num_faces = int(input("Enter the number of faces per dice (min. 4): "))
+    max_attempts = 3
+    attempts = 0
     
-    state, error = validate_input(num_dice, num_faces)
+    while attempts < max_attempts:
+        if attempts != 0:
+            print("You have", max_attempts - attempts, "attempts left.")
 
-    if state:
-        return num_dice, num_faces
-    else:
-        if error == 1:
-            raise ValueError(ERROR_MSG_1)
-        elif error == 2:
-            raise ValueError(ERROR_MSG_2)
-        elif error == 3:
-            raise ValueError(ERROR_MSG_3)
-        elif error == 4:
-            raise ValueError(ERROR_MSG_4)
+        num_dice = int(input("Enter the number of dice to roll (min. 1): "))
+        num_faces = int(input("Enter the number of faces per dice (min. 4): "))
+        
+        state, error = validate_input(num_dice, num_faces)
+
+        if state:
+            return num_dice, num_faces
+        else:
+            if error == 1:
+                print(ERROR_MSG_1)
+                print(ERROR_MSG_6)
+                attempts += 1
+            elif error == 2:
+                print(ERROR_MSG_2)
+                print(ERROR_MSG_6)
+                attempts += 1
+            elif error == 3:
+                print(ERROR_MSG_3)
+                print(ERROR_MSG_6)
+                attempts += 1
+            elif error == 4:
+                print(ERROR_MSG_4)
+                print(ERROR_MSG_6)
+                attempts += 1
+    
+    print(ERROR_MSG_5)
+    raise ValueError(ERROR_MSG_5)
 
 def main():
     """
