@@ -19,6 +19,11 @@ import random
 # Declaration of global variables
 ################################################################
 
+ERROR_MSG_1 = "The number of dice must be an integer."
+ERROR_MSG_2 = "The number of faces per dice must be an integer."
+ERROR_MSG_3 = "The number of dice must be at least 1."
+ERROR_MSG_4 = "The number of faces per dice must be at least 4."
+
 ################################################################
 # Function declarations
 ################################################################
@@ -35,22 +40,28 @@ def validate_input(num_dice, num_faces):
         ValueError: If the input is invalid.
 
     Returns:
-        bool: True if the input is valid.
+        tuple: A tuple containing a boolean indicating if the input is valid and an error number if the input is invalid.
     """
     if type(num_dice) is not int:
-        raise ValueError("The number of dice must be an integer.")
+        error_num = 1
+        raise ValueError(ERROR_MSG_1)
     elif type(num_faces) is not int:
-        raise ValueError("The number of faces per dice must be an integer.")
+        error_num = 2
+        raise ValueError(ERROR_MSG_2)
     elif num_dice != int(num_dice):
-        raise ValueError("The number of dice must be an integer.")
+        error_num = 1
+        raise ValueError(ERROR_MSG_1)
     elif num_faces != int(num_faces):
-        raise ValueError("The number of faces per dice must be an integer.")
+        error_num = 2
+        raise ValueError(ERROR_MSG_2)
     elif num_dice < 1:
-        raise ValueError("The number of dice must be at least 1.")
+        error_num = 3
+        raise ValueError(ERROR_MSG_3)
     elif num_faces < 4:
-        raise ValueError("The number of faces per dice must be at least 4.")
+        error_num = 4
+        raise ValueError(ERROR_MSG_4)
     else:
-        return True
+        return True, error_num
 
 def roll_dice(num_dice, num_faces):
     """
@@ -75,8 +86,8 @@ def roll_dice(num_dice, num_faces):
 
 def prompt_user():
     """
-    Prompt the user to enter the number of dice to roll and the number of faces per dice.
-
+    Prompts the user to enter the number of dice to roll and the number of faces per dice.
+    
     Returns:
         tuple: A tuple containing the number of dice to roll and the number of faces per dice.
 
@@ -85,11 +96,20 @@ def prompt_user():
     """
     num_dice = int(input("Enter the number of dice to roll (min. 1): "))
     num_faces = int(input("Enter the number of faces per dice (min. 4): "))
+    
+    state, error = validate_input(num_dice, num_faces)
 
-    if validate_input(num_dice, num_faces):
+    if state:
         return num_dice, num_faces
     else:
-        raise ValueError("Invalid prompt input.")
+        if error == 1:
+            raise ValueError(ERROR_MSG_1)
+        elif error == 2:
+            raise ValueError(ERROR_MSG_2)
+        elif error == 3:
+            raise ValueError(ERROR_MSG_3)
+        elif error == 4:
+            raise ValueError(ERROR_MSG_4)
 
 def main():
     """
