@@ -25,6 +25,7 @@ ERROR_MSG_3 = "The number of dice must be at least 1."
 ERROR_MSG_4 = "The number of faces per dice must be at least 4."
 ERROR_MSG_5 = "You have exceeded the maximum number of attempts."
 ERROR_MSG_6 = "Try again."
+ERROR_MSG_7 = "Input cannot be empty. Please enter a valid input."
 
 DICE = "Dice"
 DICE_NUM = "Enter the number of dice to roll (min. 1): "
@@ -107,8 +108,18 @@ def prompt_user():
         if attempts != 0:
             print(YOU_HAVE, max_attempts - attempts, ATTEMPTS_LEFT)
 
-        num_dice = int(input(DICE_NUM))
-        num_faces = int(input(FACE_NUM))
+        num_dice_str = input(DICE_NUM)
+        num_faces_str = input(FACE_NUM)
+        
+        # Check if the input is empty
+        if not num_dice_str or not num_faces_str:
+            print(ERROR_MSG_7)
+            print(ERROR_MSG_6)
+            attempts += 1
+            continue
+        
+        num_dice = int(num_dice_str)
+        num_faces = int(num_faces_str)
         
         state, error = validate_input(num_dice, num_faces)
 
