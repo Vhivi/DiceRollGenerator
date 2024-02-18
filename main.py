@@ -26,6 +26,15 @@ ERROR_MSG_4 = "The number of faces per dice must be at least 4."
 ERROR_MSG_5 = "You have exceeded the maximum number of attempts."
 ERROR_MSG_6 = "Try again."
 
+DICE = "Dice"
+DICE_NUM = "Enter the number of dice to roll (min. 1): "
+FACE_NUM = "Enter the number of faces per dice (min. 4): "
+YOU_HAVE = "You have"
+ATTEMPTS_LEFT = "attempts left."
+SUM_OF_ROLLS = "Sum of all the rolls:"
+ANOTHER_ROLL = "Do you want to roll again? (y/n): "
+INVALID_ANOTHER_ROLL = "Invalid input. Please enter 'y' or 'n'."
+
 ################################################################
 # Function declarations
 ################################################################
@@ -96,10 +105,10 @@ def prompt_user():
     
     while attempts < max_attempts:
         if attempts != 0:
-            print("You have", max_attempts - attempts, "attempts left.")
+            print(YOU_HAVE, max_attempts - attempts, ATTEMPTS_LEFT)
 
-        num_dice = int(input("Enter the number of dice to roll (min. 1): "))
-        num_faces = int(input("Enter the number of faces per dice (min. 4): "))
+        num_dice = int(input(DICE_NUM))
+        num_faces = int(input(FACE_NUM))
         
         state, error = validate_input(num_dice, num_faces)
 
@@ -140,11 +149,8 @@ def main():
     Returns:
     None
     """
-    # Initialize the roll_again variable
-    roll_again = "y"
-
     # Loop to allow the user to roll the dice multiple times
-    while roll_again.lower() == "y":
+    while True:
         # Prompt the user to enter the number of dice to roll and the number of faces per dice
         num_dice, num_faces = prompt_user()
 
@@ -153,13 +159,22 @@ def main():
 
         # Display the result of each roll
         for i in range(len(results)):
-            print("Dice", i+1, ":", results[i])
+            print(DICE, i+1, ":", results[i])
 
         # Display the sum of all the rolls
-        print("Sum of all the rolls:", sum(results))
+        print(SUM_OF_ROLLS, sum(results))
 
         # Ask the user if they want to roll again
-        roll_again = input("Do you want to roll again? (y/n): ")
+        roll_again = input(ANOTHER_ROLL).lower()
+        
+        # Loop to ensure the user enters a valid input
+        while roll_again not in ["y", "n"]:
+            print(INVALID_ANOTHER_ROLL)
+            roll_again = input(ANOTHER_ROLL).lower()
+
+        # If the user does not want to roll again, break the loop
+        if roll_again == "n":
+            break
 
 if __name__ == "__main__":
     main()
