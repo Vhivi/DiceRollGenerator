@@ -76,7 +76,9 @@ def roll_dice(num_dice, num_faces):
     """
     # Validate the input and return the results if true or prompt the user to
     # enter the input again
-    if validate_input(num_dice, num_faces):
+    state, _ = validate_input(num_dice, num_faces)
+    
+    if state:
         # Display the result of each roll
         results = []
         for _ in range(num_dice):
